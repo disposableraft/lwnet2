@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Humble internet abode" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/styles/reset.css" rel="stylesheet" />
+    <link href="/styles/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><a href="/">lancewakelingnet</a></h1>
+      </header>
+
+      <article><hr>
+
+<h1>&ldquo;Abusing Word2Vec, Part II&rdquo;</h1>
+
+<h3 id="date">2020-07-16</h3>
+
+<h3 id="tags">word2vec, moma, dataviz</h3>
+
+<hr>
+
+<p>This is part two of <a href="/blog/2020-07-04-the-curator/">Can Word2Vec Describe Art-Historical Categories</a>?</p>
+
+<p>In the last post, I roughly described how I transformed a dataset of MoMA exhibitions into something I could feed into Word2Vec. I&rsquo;m going to skip over training the model on Google Cloud for another day, and take a look at the first results and data visualizations.</p>
+
+<p>With the model trained, I began by exploring the similarities between artists.</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; model.wv.most_similar('helenfrankenthal' topn=5)
+
+[('carlandr', 0.5939756631851196),
+ ('louisnevelson', 0.5884495377540588),
+ ('claeoldenburg', 0.5837007761001587),
+ ('robertmotherwel', 0.576038658618927),
+ ('joanmitchel', 0.5745494961738586)]
+</code></pre>
+
+<p><Caption>
+Gensim Word2Vec&rsquo;s method <code>most_similar</code> returns a list of tuples, <code>(a, b)</code>, where <code>a</code> is the term and <code>b</code> is the cosine similarity (score) between the two terms. Two terms will always share the same score, but in most cases will not share the same ranking (for example, Carl Andre is the top ranked artist above, but Helen Frankenthaler does not rank among Carl Andre&rsquo;s top five).
+</Caption></p>
+
+<p>So what does it mean that two terms are similar?</p>
+
+<p>Similarity in Word2Vec refers to the cosine similarity of two vectors. Each term is a vector in 100-dimensional space, and cosine similarity is a measure of the angles between the two vectors. The function returns a value between -1 and 1, where a value of -1 means the vectors point in opposite directions, 0 means they are perpendicular, and a value of 1 means the vectors point toward the same direction.</p>
+
+<pre><code>      Term       |       Similars by rank
+-----------------|----------------------------------
+helenfrankenthal | carlandr, louisnevelson, claeoldenburg, ...
+        carlandr | frankstella, robertsmithson, robertrauschenberg, ...
+   louisnevelson | allanarcangelo, helenfrankenthal, carlandr, ...
+   claeoldenburg | robertrauschenberg, saulsteinberg, helenfrankenthal, ...
+ robertmotherwel | willemkoon, reinhardt, larririver, ...
+</code></pre>
+
+<p>Manually typing in artist names is interesting for a minute. And the lists don&rsquo;t look like total nonsense. I could see these artists exhibited together. But an overview would be more helpful. For that I turned to principle component analysis and t-SNE to reduce the 100-dimensional space to 2-dimensional space.</p>
+
+<p><img src="../../images/pollock-kruger.png" alt="TSNE plot of Pollock and Kruger." /></p>
+
+<p>The similars of Barbara Kruger (red) and Jackson Pollock (purple) appear to push away from each other. Looking at the cosine similarity between the two confirms that they&rsquo;re close to 0. This seems to agree with my intuition of their styles and the fact that I can&rsquo;t imagine Kruger and Pollock — or the artists they show with — would have much overlap.</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; bk = model.wv.get_vector('barbarakruger')
+&gt;&gt;&gt; jp = model.wv.get_vector('jacksonpollock')
+&gt;&gt;&gt; model.wv.cosine_similarities(bk, [jp])
+
+array([-0.18582422], dtype=float32)
+</code></pre>
+
+<p><Caption>The cosine similarity between Kruger and Pollock shows their angles negatively correlated and close to 0.</Caption></p>
+
+<p><img src="../../images/moma-01.png" alt="" /></p>
+
+<p>The graph above shows the similars of Cezanne, Seurat, Van Gogh and Gauguin — from MoMA&rsquo;s exhibition number 01 — grouped together with plenty of overlap. This also seems plausible IRL.</p>
+
+<p>The results are interesting enough to continue exploring — particularly since I&rsquo;m learning more about Word2Vec, Python and data visualization. But I still don&rsquo;t have an idea of the error rate. I imagine it&rsquo;s quite high, haha. In the next post, I&rsquo;ll download and merge some labels into the graph and test the model&rsquo;s error rate.</p>
+</article>
+    </div>
+
+    <script>
+      // When math classes exist include MathJax scripts
+      const mathElements = document.getElementsByClassName("math");
+      if (mathElements.length > 0) {
+        const polyfilScript = document.createElement("script");
+        polyfilScript.src =
+          "https://polyfill.io/v3/polyfill.min.js?features=es6";
+
+        const mathJax = document.createElement("script");
+        mathJax.id = "MathJax-script";
+        mathJax.async = true;
+        mathJax.src =
+          "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+        document.body.append(polyfilScript, mathJax);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Humble internet abode" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/styles/reset.css" rel="stylesheet" />
+    <link href="/styles/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><a href="/">lancewakelingnet</a></h1>
+      </header>
+
+      <article><hr>
+
+<h1>Can Word2Vec Describe Art-Historical Categories?</h1>
+
+<h3 id="date">2020-07-04</h3>
+
+<h3 id="tags">word2vec, quackery, the-curator, art</h3>
+
+<hr>
+
+<h2>Part One: Gathering Data</h2>
+
+<p>Last year, after reading some papers on the subject, I got excited about <a href="https://arxiv.org/abs/1301.3781">Word2Vec</a> and <a href="https://nlp.stanford.edu/pubs/glove.pdf">GLoVE</a>. Researchers were using large bodies of text — for example, from Google News and Wikipedia — to train models, which could predict the next word following a sequence of words, or describe analogies, such as &ldquo;Paris is to France as Berlin is to <code>X</code>&rdquo;, where the model accurately predicts <code>X</code> is &ldquo;Germany.&rdquo;<sup>1</sup></p>
+
+<p><img src="../../images/cbow-skip-gram.png" alt="cbow and skip-gram modes" /></p>
+
+<p><Caption>An illustration from <a href="https://arxiv.org/abs/1301.3781">Efficient Estimation of Word Representations in Vector Space</a> showing the context windows for bag of words and skip-gram.</Caption></p>
+
+<p>I read that Word2Vec analyzes documents in two modes: bag-of-words and skip-gram. Both modes define a default context window of five words. In bag-of-words mode, the model starts with <code>[a, b, d, e]</code> and tries to predict <code>c</code>, while skip-gram goes in the opposite direction, taking <code>c</code> and trying to predict <code>[a, b, d, e]</code>.</p>
+
+<p>One way to look at this is that, within the context window, words are equally related. Take this sentence from Hamlet:</p>
+
+<pre><code class="language-python">'To be or not to be that is the question'
+</code></pre>
+
+<p>If we were to slide a context window across Shakespeare&rsquo;s ten famous words, they would be split into two groups of five words each<sup>2</sup>:</p>
+
+<pre><code class="language-python"># group A
+['to', 'be', 'or', 'not', 'to']
+
+# group B
+['be', 'that', 'is', 'the', 'question']
+</code></pre>
+
+<p><Caption>(Up### See footnote 2 for how this is an oversimplification of how the context window proceeds.)</Caption> {#date}</p>
+
+<p>Since the terms within a context window are equally related, rearranging the order of those terms is arbitrary. So the following two groups are equal to the previous two.</p>
+
+<pre><code class="language-python"># group A
+['be', 'not', 'or', 'to', 'to']
+
+# group B
+['question', 'the', 'is', 'that', 'be']
+</code></pre>
+
+<p><Caption>(I&rsquo;m simplifying a bit here. Words that appear often and words that appear seldemly are stripped from corpora because they impart less information — at least in the English language.)</Caption></p>
+
+<p>Therefore, the context window can be thought about as a complete graph, where each node connects to all the other nodes.</p>
+
+<p><img src="../../images/k5-to-be-or-not.png" alt="A k5 complete graph" /></p>
+
+<p><Caption>A K5 complete graph.</Caption></p>
+
+<p>So while I was sliding context windows across sentences, I wondered, what if a corpus exploited the context window but wasn&rsquo;t a corpus of sequential sentences, or even sentences at all? What if it was a graph?</p>
+
+<p>I can&rsquo;t pinpoint exactly what it is about network graphs that fascinate me, but they are one of my favorite structures. Is there a more elegant way to describe relationships between two or more things? Network graphs can map out everything from the <a href="https://en.wikipedia.org/wiki/Seven_Bridges_of_K%C3%B6nigsberg">bridges of Königsberg</a> to associations between memories. If you love graphs, then you know what I&rsquo;m talking about.</p>
+
+<p>At some point I downloaded the <a href="https://github.com/MuseumofModernArt/exhibitions">exhibition data</a> from the Museum of Modern Art (MoMA). Data is something else that fascinates me. Rationally, I know that most people don&rsquo;t share my fascination of huge datasets. But deep down, I don&rsquo;t understand how they could not.</p>
+
+<p>Naturally, a graph describes MoMA&rsquo;s exhibition data. Here is the exhibition titled &ldquo;Five Unrelated Photographers&rdquo;, number <code>723</code>.</p>
+
+<p><img src="../../images/moma-exh-723.png" alt="MoMA exhibition 723" /></p>
+
+<p><Caption>If you were wondering, the number 723 is not a prime, and these five photographers are obviously related.</Caption></p>
+
+<p>Each exhibition points to its members, in this example five. From the point of view of the exhibition, each member is equally related. That is, we could also represent &ldquo;Five Unrelated Photographers&rdquo; as a K5 complete graph, which is the same graph as the context window. So this exhibition could also be represented in a context window!</p>
+
+<pre><code class="language-python">['kenheyman', 'georgekrause', 'jeromeliebling', 'minorwhite', 'garrywinogrand']
+</code></pre>
+
+<p>Because the count of artists is equal to the size of the context window, Word2Vec will recognize this as a group of equally related terms.</p>
+
+<p>But what about exhibitions where the member count is greater than the size of the context window?</p>
+
+<p>Python has a great standard module called <code>itertools</code>, which includes functions for <code>combinations</code> and <code>permutations</code>. For this purpose, the order of terms is arbitrary, so <code>combinations</code> is the function to use. Given an exhibition of N terms and an r-length equal to the size of the context window, combinations produces a list of all possible combinations.</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; from itertools import combinations
+&gt;&gt;&gt; combos = combinations(range(6), 5)
+&gt;&gt;&gt; [x for x in combos]
+[
+    (0, 1, 2, 3, 4), 
+    (0, 1, 2, 3, 5), 
+    (0, 1, 2, 4, 5), 
+    (0, 1, 3, 4, 5), 
+    (0, 2, 3, 4, 5), 
+    (1, 2, 3, 4, 5)
+]
+</code></pre>
+
+<p>From this results the building blocks for a new dataset that can be fed into Word2Vec. A sample of the resulting dataset looks like this:</p>
+
+<pre><code class="language-txt">...
+peggibacon paulgauloi charlgoeller arshilgorki annweaver
+peggibacon paulgauloi charlgoeller stefanhirsch hokeah
+peggibacon paulgauloi charlgoeller stefanhirsch ruthjona
+...
+</code></pre>
+
+<p>The big question is, for now, left unanswered. Whether or not, the model can describe art historical movements and disprove the null hypothesis is the topic for future posts. But first, I need a way to visualize the model&rsquo;s results and to measure the error rate.</p>
+
+<hr>
+
+<h2>Footnote</h2>
+
+<ol>
+<li><p>This is a great talk by <a href="https://www.youtube.com/watch?v=25nC0n9ERq4&amp;t=1s">Rachel Thomas</a>, who explains word embeddings and also goes into the biases they can encode.</p></li>
+
+<li><p>Up### This is an extreme simplification of how the context window proceeds. It actually iterates across a sentence word by word. {#date}</p></li>
+</ol>
+
+<pre><code>WORD     --&gt;       WINDOW
+----------------------------------
+to       --&gt; ['be', 'or', 'not']
+be       --&gt; ['to', 'or', 'not', 'to']
+or       --&gt; ['to', 'be', 'not', 'to', 'be']
+not      --&gt; ['to', 'be', 'or', 'to', 'be', 'that']
+to       --&gt; ['be', 'or', 'not', 'be', 'that', 'is']
+be       --&gt; ['or', 'not', 'to', 'that', 'is', 'the']
+that     --&gt; ['not', 'to', 'be', 'is', 'the', 'question']
+is       --&gt; ['to', 'be', 'that', 'the', 'question']
+the      --&gt; ['be', 'that', 'is', 'question']
+question --&gt; ['that', 'is', 'the']
+</code></pre>
+</article>
+    </div>
+
+    <script>
+      // When math classes exist include MathJax scripts
+      const mathElements = document.getElementsByClassName("math");
+      if (mathElements.length > 0) {
+        const polyfilScript = document.createElement("script");
+        polyfilScript.src =
+          "https://polyfill.io/v3/polyfill.min.js?features=es6";
+
+        const mathJax = document.createElement("script");
+        mathJax.id = "MathJax-script";
+        mathJax.async = true;
+        mathJax.src =
+          "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+        document.body.append(polyfilScript, mathJax);
+      }
+    </script>
+  </body>
+</html>

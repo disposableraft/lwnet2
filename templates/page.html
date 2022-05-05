@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Humble internet abode" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/styles/reset.css" rel="stylesheet" />
+    <link href="/styles/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><a href="/">lancewakelingnet</a></h1>
+      </header>
+
+      <article>{{ .HTML }}</article>
+    </div>
+
+    <script>
+      // When math classes exist include MathJax scripts
+      const mathElements = document.getElementsByClassName("math");
+      if (mathElements.length > 0) {
+        const polyfilScript = document.createElement("script");
+        polyfilScript.src =
+          "https://polyfill.io/v3/polyfill.min.js?features=es6";
+
+        const mathJax = document.createElement("script");
+        mathJax.id = "MathJax-script";
+        mathJax.async = true;
+        mathJax.src =
+          "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+        document.body.append(polyfilScript, mathJax);
+      }
+    </script>
+  </body>
+</html>

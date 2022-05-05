@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Humble internet abode" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/styles/reset.css" rel="stylesheet" />
+    <link href="/styles/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><a href="/">lancewakelingnet</a></h1>
+      </header>
+
+      <article><hr>
+
+<h1>&ldquo;Getting Help in Python When Coding Offline&rdquo;</h1>
+
+<h3 id="date">2020-06-19</h3>
+
+<h3 id="tags">python, self-help, no-internet</h3>
+
+<hr>
+
+<p>For most of the last year, I&rsquo;ve written, studied and coded in offline mode. The following are some of my offline sources of reference.</p>
+
+<p><img src="../../images/no-internet.png" alt="no internet" /></p>
+
+<h3>Browsers</h3>
+
+<p>I love websites, such as <a href="https://chakra-ui.com/">Chakra UI</a>, that cache docs locally using local storage and service workers. I hope more documentation sites do this, particularly for tutorials.</p>
+
+<p><a href="https://devdocs.io/">Dev Docs</a> allows you to cache different sets of documentation. I use it for HTML, CSS, DOM, Enzyme, HTTP, Javascript, Jest, Markdown, Matplotlib, Node, Pandas, Python, React and TypeScript.</p>
+
+<h3>Command Line</h3>
+
+<p>In most REPLs and command lines hitting the tab key will display the possible completions.</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; re.&lt;tab key&gt;
+re.A            re.IGNORECASE   re.Match(       re.T    ...
+</code></pre>
+
+<p><code>help</code> is a go-to in the Python REPL.</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; help(str.split)
+
+Help on built-in function split:
+
+split(sep=None, maxsplit=-1) method of builtins.str instance
+    Return a list of the words in the string, using sep as the delimiter string. [...]
+</code></pre>
+
+<p>Also available in Python is <code>dir</code>. Given an object, such as <code>str</code> below, <code>dir</code> returns &ldquo;some of&rdquo; an object&rsquo;s attributes. Called without an argument it&rsquo;ll return the names in the current scope.</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; dir(str)
+
+['__add__', '__class__', '__contains__', ... 'upper', 'zfill']
+</code></pre>
+
+<h3>Node Modules</h3>
+
+<p>One of the pleasures of coding offline is getting intimate with the packages one uses. In  libraries like <a href="https://www.gatsbyjs.org/">Gatsby</a>, I&rsquo;ll fork/clone the repo for offline reference. The repo for development will have more documentation and useful resources than the installed package. That said, I commonly find  interesting code in <code>node_modules</code> that I haven&rsquo;t read.</p>
+
+<p>To read these I start with the read-me, in VS Code&rsquo;s markdown preview mode.</p>
+
+<pre><code>code node_modules/funcional-red-black-tree/README.md
+</code></pre>
+</article>
+    </div>
+
+    <script>
+      // When math classes exist include MathJax scripts
+      const mathElements = document.getElementsByClassName("math");
+      if (mathElements.length > 0) {
+        const polyfilScript = document.createElement("script");
+        polyfilScript.src =
+          "https://polyfill.io/v3/polyfill.min.js?features=es6";
+
+        const mathJax = document.createElement("script");
+        mathJax.id = "MathJax-script";
+        mathJax.async = true;
+        mathJax.src =
+          "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+        document.body.append(polyfilScript, mathJax);
+      }
+    </script>
+  </body>
+</html>

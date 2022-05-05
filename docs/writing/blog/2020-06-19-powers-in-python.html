@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Humble internet abode" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/styles/reset.css" rel="stylesheet" />
+    <link href="/styles/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><a href="/">lancewakelingnet</a></h1>
+      </header>
+
+      <article><hr>
+
+<h1>Powers in Python</h1>
+
+<h3 id="date">2020-06-19</h3>
+
+<h3 id="tags">python, self-help</h3>
+
+<hr>
+
+<p>In Python the power operator can yield a surprising result if you expect it, as did I, to execute from left to right. The following expression evaluates to 🙀 <code>False</code>.</p>
+
+<pre><code class="language-python">
+&gt;&gt;&gt; -2 ** 2 == 4
+False
+
+</code></pre>
+
+<p>From the docs:</p>
+
+<blockquote>
+<p>The power operator binds more tightly than unary operators on its
+left; it binds less tightly than unary operators on its right. The
+syntax is:</p>
+
+<p>power ::= (await_expr | primary) [&ldquo;**&rdquo; u_expr]</p>
+
+<p>Thus, in an unparenthesized sequence of power and unary operators, the
+operators are evaluated from right to left (this does not constrain
+the evaluation order for the operands): &ldquo;-1**2&rdquo; results in &ldquo;-1&rdquo;.</p>
+</blockquote>
+
+<p>For the expected result, parenthesize the left value (or use the <code>pow()</code> function).</p>
+
+<pre><code class="language-python">
+&gt;&gt;&gt; (-2)**2 == 4
+True
+
+&gt;&gt;&gt; math.pow(-2, 2) == 4
+True
+
+</code></pre>
+</article>
+    </div>
+
+    <script>
+      // When math classes exist include MathJax scripts
+      const mathElements = document.getElementsByClassName("math");
+      if (mathElements.length > 0) {
+        const polyfilScript = document.createElement("script");
+        polyfilScript.src =
+          "https://polyfill.io/v3/polyfill.min.js?features=es6";
+
+        const mathJax = document.createElement("script");
+        mathJax.id = "MathJax-script";
+        mathJax.async = true;
+        mathJax.src =
+          "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+        document.body.append(polyfilScript, mathJax);
+      }
+    </script>
+  </body>
+</html>

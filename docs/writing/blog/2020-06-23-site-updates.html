@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Humble internet abode" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/styles/reset.css" rel="stylesheet" />
+    <link href="/styles/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><a href="/">lancewakelingnet</a></h1>
+      </header>
+
+      <article><hr>
+
+<h1>&ldquo;Version 0.2&rdquo;</h1>
+
+<h3 id="date">&ldquo;2020-06-23&rdquo;</h3>
+
+<h3 id="tags">&ldquo;markdown, karma-ui, gatsby&rdquo;</h3>
+
+<hr>
+
+<p>Yesterday, I deployed the second major version of lancewakeling.net. Four years ago, when I left NYC, I let my all my domains lapse, and I basically took a longggg break from coding, and from projects in general. Last May, however, I bought a laptop and began coding in fits and starts. Most of the projects I started and — after a flurry of commits — abandoned.</p>
+
+<p>Gatsby is fun to work with because it&rsquo;s almost instantly gratifying. Although I agree with a friend who said that if you weren&rsquo;t already familiar with Node, React, Graphql and so on, then Gatsby would be an overwhelming learn. Luckily, there&rsquo;s a ton of documentation, and I&rsquo;ve used all three technologies on previous projects. So picking up Gatsby has been painless (save for a minor setback migrating from <code>MarkdownRemark</code> to <code>MDX</code>).</p>
+
+<p>For this version of the site, I iterated on the design, using a newly installed library, <a href="https://chakra-ui.com/">Chakra UI</a>. The first version of the site was essentially a placeholder. Now that I&rsquo;m starting to look for work again, I&rsquo;d like to have something to show people, and it&rsquo;s fun to ship something, even if I&rsquo;m the only person who knows it&rsquo;s out there.</p>
+</article>
+    </div>
+
+    <script>
+      // When math classes exist include MathJax scripts
+      const mathElements = document.getElementsByClassName("math");
+      if (mathElements.length > 0) {
+        const polyfilScript = document.createElement("script");
+        polyfilScript.src =
+          "https://polyfill.io/v3/polyfill.min.js?features=es6";
+
+        const mathJax = document.createElement("script");
+        mathJax.id = "MathJax-script";
+        mathJax.async = true;
+        mathJax.src =
+          "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+        document.body.append(polyfilScript, mathJax);
+      }
+    </script>
+  </body>
+</html>
