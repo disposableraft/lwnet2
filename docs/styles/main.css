@@ -1,8 +1,10 @@
 body {
+  background-color: #fafafa;
   color: #333;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  font: 16px/1.75 'Helvetica Neue', Helvetica, Arial, sans-serif;
   align-items: center;
   text-align: left;
 }
@@ -22,6 +24,15 @@ a:visited {
 .container {
   max-width: 720px;
   width: 100%;
-  padding: 0 10em;
+  padding: 0 1em;
+}
+
+code {
+  max-width: 720px;
+  white-space: break-spaces;
+}
+
+p, p img {
+  margin: 1em 0;
 }
 
