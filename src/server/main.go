@@ -10,6 +10,8 @@ import (
 )
 
 func main() {
+	gatsby.BuildSite()
+
 	fileServer := http.FileServer(http.Dir("./docs"))
 	http.Handle("/", fileServer)
 
@@ -44,6 +46,11 @@ func main() {
 	}()
 
 	err = watcher.Add("templates")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = watcher.Add("src/content/writing/blog")
 	if err != nil {
 		log.Fatal(err)
 	}
