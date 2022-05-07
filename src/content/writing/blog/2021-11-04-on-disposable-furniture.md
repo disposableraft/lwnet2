@@ -1,5 +1,5 @@
 ---
-#  "On Disposable Furniture"
+#  On Disposable Furniture
 ### 2021-11-04 {#date}
 ### furniture, consumerism, design {#tags}
 ---
@@ -16,6 +16,6 @@ I think of all the amateur woodworkers. Across the nation, in both unincorporate
 
 I keep thinking, what about another way? Something that retains what capitalsm discards and connects what it fractures. What if there were a way to employ the workshops of America to build sturdy, local, and well-designed furniture without "disrupting a market" with a startup or exploiting a new set of task rabbits? 
 
-We often leap to technological solutions, but I'm not so sure that's the answer. We have everything we need locally, we just need to make use of it. What we need is a change in mindset. Many of the side effects of quarantine and supply shortages have changed us ------ but how>?? hmm
+We often leap to technological solutions, but I'm not so sure that's the answer. We have everything we need locally, we just need to make use of it. What we need is a change in mindset.
 
  
